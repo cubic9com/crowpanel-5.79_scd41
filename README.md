@@ -1,0 +1,179 @@
+
+# Overview / 概要
+
+This project is a low-power consumption CO<sub>2</sub> concentration meter that uses [Elecrow's CrowPanel ESP32 E-Paper HMI 5.79-inch Display](https://www.elecrow.com/crowpanel-esp32-5-79-e-paper-hmi-display-with-272-792-resolution-black-white-color-driven-by-spi-interface.html) and [Sensirion SCD41 CO<sub>2</sub> sensor](https://sensirion.com/products/catalog/SCD41) .
+
+\[日本語\]
+
+このプロジェクトは、 [ElecrowのCrowPanel ESP32 E-Paper HMI 5.79-inch Display](https://www.elecrow.com/crowpanel-esp32-5-79-e-paper-hmi-display-with-272-792-resolution-black-white-color-driven-by-spi-interface.html) と [Sensirion SCD41 CO<sub>2</sub>センサー](https://sensirion.com/jp/products/product-catalog/SCD41) を使用した低消費電力CO<sub>2</sub>濃度計です。
+
+# Image / 写真
+
+![crowpanel-5.79_scd41_01](images/crowpanel-5.79_scd41_01.jpg)
+
+![crowpanel-5.79_scd41_02](images/crowpanel-5.79_scd41_02.jpg)
+
+# Motivation / 開発のきっかけ
+
+Due to the COVID-19 pandemic, many people in Japan, including myself, began working remotely from home more frequently.
+
+While doing so, I started to notice an issue: poor ventilation at home often leads to a rise in indoor carbon dioxide (CO₂) levels. This, in turn, can negatively affect concentration and productivity.
+
+In fact, various studies have shown that high indoor CO₂ levels can impair focus, decision-making, and cognitive performance—all of which are crucial for effective work.
+
+| CO₂ concentration (ppm) | Condition/Impact |
+| -------------- | -------------------- |
+| 400–600 ppm    | Outdoor air level. Very good air quality. |
+| 600–1000 ppm   | Typical indoor environment. Little to no problem. |
+| 1000–1500 ppm  | Mild drowsiness and reduced concentration may occur. |
+| 1500–2000 ppm  | Noticeable drowsiness and decreased cognitive performance. |
+| Above 2000 ppm | Significant decline in decision-making and cognitive function.  |
+
+In office buildings in Japan, ventilation is strictly regulated by laws such as the Building Standards Act (Article 28) and the Act on Maintenance of Sanitation in Buildings. These rules ensure that indoor CO₂ levels stay below 1,000 ppm.
+
+However, such standards aren’t applied in private homes, which makes it easy to overlook ventilation and air quality during remote work.
+
+To address this issue, I initially tried using a commercially available CO₂ monitor. While it worked well, I found it consumed more power than I expected—mostly because its screen was always on and updated data every second.
+
+So, I decided to build my own low-power CO₂ monitor using electronic paper (e-paper). E-paper displays consume power only when the screen content is updated, making them very energy-efficient.
+
+To further reduce power consumption, I chose a microcontroller that supports sleep mode and set the system to operate intermittently—waking up every few minutes to take readings and update the display.
+
+For this project, I used the [Elecrow's CrowPanel ESP32 E-Paper HMI 5.79-inch Display](https://www.elecrow.com/crowpanel-esp32-5-79-e-paper-hmi-display-with-272-792-resolution-black-white-color-driven-by-spi-interface.html). It features an e-paper display and an ESP32-based wireless module.
+
+By connecting the CrowPanel with a [Sensirion SCD41 CO₂ sensor](https://sensirion.com/products/catalog/SCD41), I was able to build efficient CO₂ monitor tailored for home use.
+
+\[日本語\]
+
+コロナ禍をきっかけに、自宅でリモートワークをする機会が増えました。
+
+その中で気になったのが、換気が不十分になることによるCO₂濃度の上昇と、それが原因で集中力や生産性が下がることです。
+
+実際、室内のCO₂濃度が高くなると、集中力・判断力・意思決定力が低下し、生産性にも悪影響が出ることが、さまざまな研究で明らかになっています。
+
+以下は、CO₂濃度とその影響の目安です。
+
+| CO₂濃度 (ppm)     | 状態・影響                |
+| --------------- | -------------------- |
+| 400–600 ppm     | 屋外レベル。非常に良好な空気環境。    |
+| 600–1000 ppm   | 一般的な室内環境。問題はほぼない。    |
+| 1000–1500 ppm | 軽度の眠気・集中力低下が見られることも。 |
+| 1500–2000 ppm | 明確な眠気、思考力低下。生産性が下がる。 |
+| 2000 ppm 以上    | 判断力・意思決定能力が明確に低下する。  |
+
+オフィスでは、[建築基準法第28条](https://laws.e-gov.go.jp/law/325AC0000000201/20251201_507AC0000000035#Mp-Ch_2-At_28) や [ビル管理法（「建築物における衛生的環境の確保に関する法律」）](https://www.mhlw.go.jp/bunya/kenkou/seikatsu-eisei10/) に基づいて換気がおこなわれており、CO₂濃度も1000ppm以下に保たれています。
+
+しかし自宅では、そうした管理がないため、気づかないうちに空気が悪くなりやすいのです。
+
+その対策として、市販のCO₂濃度計を使ってみたのですが、常に画面が点灯していて毎秒データが更新されるため、今度は消費電力が気になってしまいました。
+
+そこで、電子ペーパーを使ったCO₂濃度計を自作することにしました。
+
+電子ペーパーは表示を書き換えるときだけ電力を使うため、消費電力を抑えることができます。
+さらに、電子ペーパーやCO₂センサーを制御するマイコンもスリープモード対応のものを選ぶこととしました。数分ごとに動作するように設定して、さらに消費電力を抑えます。
+
+自作に使ったのは、 [ElecrowのCrowPanel ESP32 E-Paper HMI 5.79-inch Display](https://www.elecrow.com/crowpanel-esp32-5-79-e-paper-hmi-display-with-272-792-resolution-black-white-color-driven-by-spi-interface.html) というデバイスです。これは、電子ペーパーとESP32という無線通信機能付きマイコンを搭載しています。
+
+これに、[Sensirion社のCO2センサーSCD41](https://sensirion.com/products/catalog/SCD41) を接続することで希望通りのCO₂濃度計を作ることができました。
+
+# Installation / インストール
+
+1. Connect [Sensirion SCD41 CO<sub>2</sub> sensor](https://sensirion.com/products/catalog/SCD41) to  CrowPanel.
+    |SCD41's pin|CrowPanel's GPIO pin|
+    |---|---|
+    |GND|GND|
+    |VCC|3V3|
+    |SCL|GPIO19|
+    |SDA|GPIO38|
+
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/cubic9com/crowpanel-5.79_scd41.git
+    cd crowpanel-5.79_scd41
+    ```
+
+1. Install [Visual Studio Code](https://code.visualstudio.com/) if you haven't already.
+
+1. Open the project using Visual Studio Code:
+    ```sh
+    code .
+    ```
+
+1. Install `PlatformIO IDE` extension:
+    - Go to the Extensions view (`Ctrl+Shift+X`).
+    - Search for `PlatformIO IDE` and install it.
+
+1. Open PlatformIO Home:
+    - In the left Activity Bar, click PlatformIO icon.
+    - In the left Primary Sidebar, go to `QUICK ACCESS > PIO Home > Open`.
+
+1. Open the project:
+    - In the right Editor Group, click `Open Project` in the `PIO HOME` tab.
+    - Select the cloned `crowpanel-5.79_scd41` project folder.
+
+1. Build and upload the project:
+    - In the left Primary Sidebar, go to `PROJECT TASKS > esp32-s3-devkitc-1 > General > Upload`.
+
+\[日本語\]
+
+1. [Sensirion SCD41 CO<sub>2</sub> sensor](https://sensirion.com/products/catalog/SCD41) をCrowPanelに接続する。
+    |SCD41のピン|CrowPanelのGPIOピン|
+    |---|---|
+    |GND|GND|
+    |VCC|3V3|
+    |SCL|GPIO19|
+    |SDA|GPIO38|
+
+1. リポジトリをクローンします:
+    ```sh
+    git clone https://github.com/cubic9com/crowpanel-5.79_scd41.git
+    cd crowpanel-5.79_scd41
+    ```
+
+1. まだインストールしていない場合は、[Visual Studio Code](https://code.visualstudio.com/) をインストールします。
+
+1. Visual Studio Code でプロジェクトを開きます:
+    ```sh
+    code .
+    ```
+
+1. `PlatformIO IDE` 拡張機能をインストールします:
+    - 左サイドバーの「拡張機能」ビュー (`Ctrl+Shift+X`) を開きます。
+    - `PlatformIO IDE` を検索してインストールします。
+
+1. PlatformIO Home を開きます:
+    - 左のアクティビティバーで PlatformIO アイコンをクリックします。
+    - 左のメインサイドバーから `QUICK ACCESS > PIO Home > Open` を選択します。
+
+1. プロジェクトを開きます:
+    - 右のエディターグループ内の `PIO HOME` タブで `Open Project` をクリックします。
+    - クローンした `crowpanel-5.79_scd41` プロジェクトフォルダーを選択します。
+
+1. プロジェクトをビルド＆アップロードします:
+    - 左のメインサイドバーから `PROJECT TASKS > esp32-s3-devkitc-1 > General > Upload` を選択します。
+
+# Usage / 使用方法
+
+1. Pressing and holding the scroll wheel of CrowPanel to perform Forced recalibration (FRC).  
+
+1. Wait 3 minutes.
+
+1. Your CrowPanel will now display the CO<sub>2</sub> concentration every 20 minutes.  
+Note: To reduce power consumption, CrowPanel enters [Deep-Sleep](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#id1) mode except during measurement and drawing.
+
+\[日本語\]
+
+1. Forced recalibration (FRC) を実行するために、部屋が換気されている状態で、CrowPanelのスクロールホイールを長押しする。  
+
+1. 3分間待つ。
+
+1. 以降は20分毎にCO<sub>2</sub>濃度がCrowPanelに表示される。  
+（電力消費を抑えるため、CrowPanelは計測・描画中以外は [Deep-Sleep](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#id1) モードになる）
+
+# LICENSE / ライセンス
+
+Copyright (C) 2026, cubic9com All rights reserved.
+
+This code is licensed under the MIT license.
+
+See the LICENSE for more information.
