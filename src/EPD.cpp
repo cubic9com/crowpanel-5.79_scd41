@@ -261,6 +261,7 @@ void EPD_ShowChar(uint16_t x, uint16_t y, uint16_t chr, uint16_t size1, uint16_t
         uint16_t bytes_per_char;
     };
     static std::map<uint16_t, FontInfo> font_map = {
+        {24, {(const unsigned char*)ascii_2412, 36}},
         {48, {(const unsigned char*)chivo_mono_4824, 144}},
         {224, {(const unsigned char*)chivo_mono_256160, 3136}}
     };
