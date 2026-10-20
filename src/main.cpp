@@ -58,13 +58,17 @@ const uint16_t CO2_INVALID = 0xFFFF;
 // FRC (Forced Recalibration) settings
 // FRC（Forced Recalibration）設定
 
-// Equilibration time before FRC
-// FRC前の安定化待機時間（分）
-const int frcEquilibrationMinutes = 3;
+// Number of single-shot measurements for equilibration before FRC.
+// FRC前の安定化用シングルショット測定回数。
+const int frcEquilibrationShots = 5;
 
-// Number of progress dots displayed per minute
-// 1分あたりに表示する進捗ドットの数
-const int frcDotsPerMinute = 6;    
+// Interval between equilibration single-shot measurements (ms) = 60 s
+// 安定化用シングルショット測定の間隔（ミリ秒）= 60秒
+const int frcShotIntervalMs = 60000;
+
+// Number of progress dots displayed per shot interval
+// 1ショット間隔あたりに表示する進捗ドットの数
+const int frcDotsPerShot = 6;
 
 // Interval between dots (ms) = 10 s
 // ドット表示の間隔（ミリ秒）= 10秒
@@ -178,70 +182,62 @@ void performFrc()
     // FRC開始をSerialおよびディスプレイでユーザーに通知する。
     Serial.println("Performing Forced Recalibration (FRC).");
     EPD_ShowString(0, 0, "Performing Forced Recalibration (FRC).", 24, BLACK);
-    Serial.print("Waiting ");
-    Serial.print(frcEquilibrationMinutes);
-    Serial.println(" minutes for equilibration.");
-    snprintf(buffer, sizeof(buffer), "Waiting %d minutes for equilibration.", frcEquilibrationMinutes);
+    Serial.print("Equilibrating with ");
+    Serial.print(frcEquilibrationShots);
+    Serial.println(" single shots at 1-minute intervals.");
+    snprintf(buffer, sizeof(buffer), "Equilibrating: %d single shots x 1 min.", frcEquilibrationShots);
     EPD_ShowString(0, 30, buffer, 24, BLACK);
     EPD_Display(imageBW);
     EPD_FastUpdate();
     EPD_Clear_R26A6H();
 
-    // Stop periodic measurement before factory reset.
-    // ファクトリーリセット前にPeriodicモードを停止する。
-    error = scd4x.stopPeriodicMeasurement();
-    if (logSensorError(error, "stopPeriodicMeasurement()"))
+    // Equilibrate in single-shot mode matching the normal operation mode.
+    //
+    // 通常運用モードに合わせたシングルショットモードでセンサーを安定化させる。
+    for (int i = 1; i <= frcEquilibrationShots; i++)
     {
-        return;
-    }
-    delay(500);
-
-    // Perform a factory reset to clear any previous calibration offsets.
-    // 以前の校正オフセットをクリアするためファクトリーリセットを実行する。
-    error = scd4x.performFactoryReset();
-    if (logSensorError(error, "performFactoryReset()"))
-    {
-        return;
-    }
-    delay(1200);
-
-    // Start periodic measurement for equilibration.
-    // 安定化のためにPeriodicモードを開始する。
-    error = scd4x.startPeriodicMeasurement();
-    if (logSensorError(error, "startPeriodicMeasurement()"))
-    {
-        return;
-    }
-
-    // Wait frcEquilibrationMinutes minutes, showing a progress dot every frcDotIntervalMs ms.
-    // frcEquilibrationMinutes分待機し、frcDotIntervalMs msごとに進捗ドットを表示する。
-    for (int i = 1; i <= frcEquilibrationMinutes; i++)
-    {
-        for (int j = 0; j < frcDotsPerMinute; j++)
+        // Trigger a single-shot measurement (result is used only for equilibration).
+        // 安定化用にシングルショット測定を実行する（結果は安定化目的のみで使用）。
+        error = scd4x.measureSingleShot();
+        if (logSensorError(error, "measureSingleShot() [FRC equilibration]"))
         {
-            delay(frcDotIntervalMs);
-            Serial.print(".");
-            EPD_ShowString(20 * j, 30 * i + 30, ".", 24, BLACK);
-            EPD_Display(imageBW);
-            EPD_FastUpdate();
+            return;
         }
-        Serial.println();
+        Serial.print("Equilibration shot ");
         Serial.print(i);
-        Serial.println(" minute(s) has passed.");
-        snprintf(buffer, sizeof(buffer), "%d minute(s) has passed.", i);
+        Serial.print("/");
+        Serial.print(frcEquilibrationShots);
+        Serial.println(" triggered.");
+        snprintf(buffer, sizeof(buffer), "Shot %d/%d", i, frcEquilibrationShots);
         EPD_ShowString(0, 30 * i + 30, buffer, 24, BLACK);
         EPD_Display(imageBW);
         EPD_FastUpdate();
+
+        if (i < frcEquilibrationShots)
+        {
+            // Wait frcShotIntervalMs between shots, showing a progress dot every frcDotIntervalMs ms.
+            // ショット間はfrcShotIntervalMs待機し、frcDotIntervalMs msごとに進捗ドットを表示する。
+            for (int j = 0; j < frcDotsPerShot; j++)
+            {
+                delay(frcDotIntervalMs);
+                Serial.print(".");
+                EPD_ShowString(20 * j + 100, 30 * i + 30, ".", 24, BLACK);
+                EPD_Display(imageBW);
+                EPD_FastUpdate();
+            }
+            Serial.println();
+        }
     }
 
-    // Stop periodic measurement before FRC.
-    // FRC実行前にPeriodicモードを停止する。
-    error = scd4x.stopPeriodicMeasurement();
-    if (logSensorError(error, "stopPeriodicMeasurement()"))
-    {
-        return;
-    }
-    delay(500);
+    // Wait for the last single-shot measurement to complete (5 s), then stop.
+    // 最後のシングルショット測定の完了を待ち（5秒）、その後停止する。
+    // measureSingleShot() issues the command and returns immediately; the sensor
+    // needs ~5 s to finish. We simply delay here instead of polling getDataReadyFlag(),
+    // because we only need the equilibration effect, not the actual reading.
+    // measureSingleShot()はコマンドを発行してすぐ戻る。センサーは完了に約5秒かかる。
+    // 実際の測定値は不要で安定化効果のみ目的のため、getDataReadyFlag()ポーリングの代わりに
+    // 単純にdelayする。
+    delay(5000);
 
     // Perform Forced Recalibration (FRC).
     // FRCを実行する。校正結果はセンサーのEEPROMに自動保存される。
