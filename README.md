@@ -31,7 +31,7 @@ In fact, various studies have shown that high indoor CO₂ levels can impair foc
 
 In office buildings in Japan, ventilation is strictly regulated by laws such as the Building Standards Act (Article 28) and the Act on Maintenance of Sanitation in Buildings. These rules ensure that indoor CO₂ levels stay below 1,000 ppm.
 
-However, such standards don’t applied to private homes, which makes it easy to overlook ventilation and air quality during remote work.
+However, such standards don’t apply to private homes, which makes it easy to overlook ventilation and air quality during remote work.
 
 To address this issue, I initially tried using a commercially available CO₂ monitor. While it worked well, I found it consumed more power than I expected—mostly because its screen was always on and updated data every second.
 
@@ -78,7 +78,7 @@ By connecting the CrowPanel with a [Sensirion SCD41 CO₂ sensor](https://sensir
 
 # Installation / インストール
 
-1. Connect [Sensirion SCD41 CO<sub>2</sub> sensor](https://sensirion.com/products/catalog/SCD41) to  CrowPanel.
+1. Connect the [Sensirion SCD41 CO<sub>2</sub> sensor](https://sensirion.com/products/catalog/SCD41) to the CrowPanel.
     |SCD41's pin|CrowPanel's GPIO pin|
     |---|---|
     |GND|GND|
