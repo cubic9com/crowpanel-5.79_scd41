@@ -1,7 +1,7 @@
 
 # Overview / 概要
 
-This project is a low-power consumption CO<sub>2</sub> concentration meter that uses [Elecrow's CrowPanel ESP32 E-Paper HMI 5.79-inch Display](https://www.elecrow.com/crowpanel-esp32-5-79-e-paper-hmi-display-with-272-792-resolution-black-white-color-driven-by-spi-interface.html) and [Sensirion SCD41 CO<sub>2</sub> sensor](https://sensirion.com/products/catalog/SCD41) .
+This project is a low-power consumption CO<sub>2</sub> concentration meter that uses [Elecrow's CrowPanel ESP32 E-Paper HMI 5.79-inch Display](https://www.elecrow.com/crowpanel-esp32-5-79-e-paper-hmi-display-with-272-792-resolution-black-white-color-driven-by-spi-interface.html) and [a Sensirion SCD41 CO<sub>2</sub> sensor](https://sensirion.com/products/catalog/SCD41) .
 
 \[日本語\]
 
@@ -31,7 +31,7 @@ In fact, various studies have shown that high indoor CO₂ levels can impair foc
 
 In office buildings in Japan, ventilation is strictly regulated by laws such as the Building Standards Act (Article 28) and the Act on Maintenance of Sanitation in Buildings. These rules ensure that indoor CO₂ levels stay below 1,000 ppm.
 
-However, such standards aren’t applied in private homes, which makes it easy to overlook ventilation and air quality during remote work.
+However, such standards don’t applied to private homes, which makes it easy to overlook ventilation and air quality during remote work.
 
 To address this issue, I initially tried using a commercially available CO₂ monitor. While it worked well, I found it consumed more power than I expected—mostly because its screen was always on and updated data every second.
 
@@ -41,7 +41,7 @@ To further reduce power consumption, I chose a microcontroller that supports sle
 
 For this project, I used the [Elecrow's CrowPanel ESP32 E-Paper HMI 5.79-inch Display](https://www.elecrow.com/crowpanel-esp32-5-79-e-paper-hmi-display-with-272-792-resolution-black-white-color-driven-by-spi-interface.html). It features an e-paper display and an ESP32-based wireless module.
 
-By connecting the CrowPanel with a [Sensirion SCD41 CO₂ sensor](https://sensirion.com/products/catalog/SCD41), I was able to build efficient CO₂ monitor tailored for home use.
+By connecting the CrowPanel with a [Sensirion SCD41 CO₂ sensor](https://sensirion.com/products/catalog/SCD41), I was able to build an efficient CO₂ monitor tailored for home use.
 
 \[日本語\]
 
@@ -154,7 +154,7 @@ By connecting the CrowPanel with a [Sensirion SCD41 CO₂ sensor](https://sensir
 
 # Usage / 使用方法
 
-1. Pressing and holding the scroll wheel of CrowPanel to perform Forced recalibration (FRC).  
+1. Press and hold the scroll wheel of the CrowPanel to perform forced recalibration (FRC).  
 
 1. Wait 3 minutes.
 
