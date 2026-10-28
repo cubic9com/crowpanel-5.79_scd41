@@ -1,11 +1,11 @@
 
 # Overview / 概要
 
-This project is a low-power consumption CO<sub>2</sub> concentration meter that uses [Elecrow's CrowPanel ESP32 E-Paper HMI 5.79-inch Display](https://www.elecrow.com/crowpanel-esp32-5-79-e-paper-hmi-display-with-272-792-resolution-black-white-color-driven-by-spi-interface.html) and [a Sensirion SCD41 CO<sub>2</sub> sensor](https://sensirion.com/products/catalog/SCD41) .
+This CO₂ monitor spends most of its life asleep. Built around [Elecrow's CrowPanel ESP32 E-Paper HMI 5.79-inch Display](https://www.elecrow.com/crowpanel-esp32-5-79-e-paper-hmi-display-with-272-792-resolution-black-white-color-driven-by-spi-interface.html) and [a Sensirion SCD41 CO₂ sensor](https://sensirion.com/products/catalog/SCD41), it wakes every 20 minutes to measure the CO₂ concentration, redraws its e-paper screen, and drops back into deep sleep — so the air quality at home is always on display, for next to no power.
 
 \[日本語\]
 
-このプロジェクトは、 [ElecrowのCrowPanel ESP32 E-Paper HMI 5.79-inch Display](https://www.elecrow.com/crowpanel-esp32-5-79-e-paper-hmi-display-with-272-792-resolution-black-white-color-driven-by-spi-interface.html) と [Sensirion SCD41 CO<sub>2</sub>センサー](https://sensirion.com/jp/products/product-catalog/SCD41) を使用した低消費電力CO<sub>2</sub>濃度計です。
+このCO₂モニターは、稼働時間の大半をスリープ状態で過ごします。[ElecrowのCrowPanel ESP32 E-Paper HMI 5.79-inch Display](https://www.elecrow.com/crowpanel-esp32-5-79-e-paper-hmi-display-with-272-792-resolution-black-white-color-driven-by-spi-interface.html)と[SensirionのSCD41 CO₂センサー](https://sensirion.com/jp/products/product-catalog/SCD41)を組み合わせており、20分ごとに起動してCO₂濃度を測定し、電子ペーパー画面を更新すると、再びディープスリープ状態に戻ります。これにより、極めてわずかな電力消費で、部屋の空気の状態を表示し続けられます。
 
 # Image / 写真
 
